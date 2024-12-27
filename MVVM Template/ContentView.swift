@@ -8,17 +8,28 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(ViewModel.self) private var viewModel
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            if viewModel.loggedIn {
+                Text("Welcome")
+                Text(viewModel.storage.userName)
+            } else {
+                UserInputs()
+                
+                Button("log In") {
+                    viewModel.loggedIn = true
+                    viewModel.clearPassword()
+                }
+                .disabled(viewModel.signInButtonDisabled)
+            }
         }
         .padding()
     }
 }
 
 #Preview {
+    @Previewable @State var viewModel = ViewModel()
     ContentView()
+        .environment(viewModel)
 }
